@@ -1,0 +1,8 @@
+api:
+  account:
+    host: "localhost"
+    port: "18000"
+    
+app:
+  client_id: "1"
+  client_secret: "1"
