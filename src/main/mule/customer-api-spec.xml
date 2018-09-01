@@ -126,7 +126,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\accounts\(id):application\json:account-api-spec-config">
-		<account-apispec:put doc:name="Update Account" doc:id="49abb4c3-9b86-4c5a-9eee-267334dcc6be" />
+		<account-apispec:put doc:name="Update Account" doc:id="49abb4c3-9b86-4c5a-9eee-267334dcc6be" config-ref="Account_API_Spec_Config"/>
 		<logger level="INFO" doc:name="Logger" doc:id="2d5ca2bd-c169-4eae-b9c4-e37bb5d127d2" message="#[payload]"/>
     </flow>
     <flow name="delete:\accounts\(id):account-api-spec-config">
