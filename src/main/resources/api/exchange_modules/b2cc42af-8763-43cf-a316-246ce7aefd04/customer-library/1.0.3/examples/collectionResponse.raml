@@ -1,0 +1,136 @@
+#%RAML 1.0 NamedExample
+meta: 
+  messages: 
+    - severity: INFO
+      code: "200"
+      description: OK
+      link: 
+        href: http://localhost
+        title: All good!
+  totalItems: 2
+  pagingOffset: 1
+  pagingLimit: 15
+
+links: 
+  self: 
+    href: http://localhost/currentPage
+    title: Current page
+  first: 
+    href: http://localhost/firstPage
+    title: First Page
+  prev: 
+    href: http://localhost/previousPage
+    title: Previous page
+  next: 
+    href: http://localhost/nextPage
+    title: Next Page
+  last: 
+    href: http://localhost/lastPage
+    title: Last Page
+
+customers:  
+- sourceSystem: Salesforce NA Marketing
+  id: a1
+  name: Northern Trail Outfitters
+  phone: 
+    - type: Work
+      phoneNumber: 415-233-2345
+      preferred: true
+      doNotCall: false
+      doNotText: false
+  email: 
+    - type: Work
+      address: ahyoung@ca.com
+      preferred: true
+      doNotEmail: false
+  postalAddresses: 
+    - addressId: addr1
+      type: Home
+      addressLines: 
+        - 1 Market St
+        - Suite 300
+      city: San Francisco
+      state: CA
+      postalCode: "94105"
+      countryName: United States of America
+      countryCode: USA
+      effectiveDates: 
+        fromDate: 2016-08-12
+        toDate: 2070-11-23
+  webAddresses:
+    - href: http://mulesoft.com
+      title: Home
+  financials:
+    currency:
+      code: USD
+    annualRevenueInUSD: 10000000000
+    numberOfEmployees: 36000 
+  createdDateTime: 
+    byEmail: 
+      type: Corporate
+      address: keith@mythical.com
+      preferred: true
+      doNotEmail: true
+    onDateTime: 2018-05-01T12:01:01Z
+  lastModifiedDateTime: 
+    byEmail: 
+      type: Corporate
+      address: sanjna@mythical.com
+      preferred: true
+      doNotEmail: true
+    onDateTime: 2018-06-01T17:20:30Z
+  link: 
+    href: http://localhost
+    title: Link to Account 360
+- sourceSystem: Salesforce EMEA Marketing
+  id: a2
+  name: Mythical Retailer
+  phone: 
+    - type: Work
+      phoneNumber: 404-233-2345
+      preferred: true
+      doNotCall: false
+      doNotText: false
+  email: 
+    - type: Work
+      address: brett@ga.com
+      preferred: true
+      doNotEmail: false
+  postalAddresses: 
+    - addressId: addr1
+      type: Home
+      addressLines: 
+        - 154 Douglas Fir Dr
+      city: Waleska
+      state: GA
+      postalCode: "30183"
+      countryName: United States of America
+      countryCode: USA
+      effectiveDates: 
+        fromDate: 2018-08-12
+        toDate: 2050-11-23
+  webAddresses:
+    - href: http://mulesoft.com
+      title: Home
+  financials:
+    currency:
+      code: USD
+    annualRevenueInUSD: 2000000000
+    numberOfEmployees: 3600
+  createdDateTime: 
+    byEmail: 
+      type: Corporate
+      address: george@mythical.com
+      preferred: true
+      doNotEmail: true
+    onDateTime: 2018-01-01T12:01:01Z
+  lastModifiedDateTime: 
+    byEmail: 
+      type: Corporate
+      address: mary@mythical.com
+      preferred: true
+      doNotEmail: true
+    onDateTime: 2018-08-01T17:20:30Z
+  link: 
+    href: http://localhost
+    title: Link to Account 360

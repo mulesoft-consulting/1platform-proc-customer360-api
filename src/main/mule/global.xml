@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+<mule xmlns:account-apispec="http://www.mulesoft.org/schema/mule/account-apispec" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/account-apispec http://www.mulesoft.org/schema/mule/account-apispec/current/mule-account-apispec.xsd">
 	<configuration-properties doc:name="Configuration properties" doc:id="11b8d98a-b23a-47b1-8516-3636b5ba15d8" file="config/configuration.yaml" />
+	<api-gateway:autodiscovery apiId="${app.autodiscovery}" doc:name="API Autodiscovery" doc:id="c8e693d0-0bd1-4a15-99f0-b9fda9ca65f6" flowRef="customer-api-spec-main" />
+	<account-apispec:config name="Account_API_Spec_Config" doc:name="Account API Spec Config" doc:id="97583def-14fc-413d-983f-4eadb92d88e2" property_host="${api.account.host}" property_port="${api.account.port}" property_basePath="/api" property_client-id="${app.client_id}" property_client-secret="${app.client_secret}" />
 </mule>

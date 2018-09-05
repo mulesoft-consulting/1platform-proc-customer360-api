@@ -52,7 +52,7 @@
     	<dependency>
             <groupId>66234019-5a31-4239-ba28-4e6d70f0468a</groupId>
             <artifactId>account-api-spec</artifactId>
-            <version>1.0.11</version>
+            <version>1.0.12</version>
             <classifier>mule-plugin</classifier>
         </dependency>
     </dependencies>

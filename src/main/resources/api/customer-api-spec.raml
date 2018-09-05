@@ -1,0 +1,46 @@
+#%RAML 1.0
+title: Customer API Spec
+baseUri: https://mocksvc.mulesoft.com/mocks/db57aded-a0b9-4238-a559-ebea97807335/{version} # baseUri: http://localhost/{version}
+version: v1
+description: This API spec design highlights the power of RAML. It reuses existing RAML fragments for dataTypes, traits, resourceTypes and more to simplify and accelerate definig an API Spec. Fragments also ENSURE CONSISTENCY acrosss APIs. With consistency comes acclerated delivery due to developers familiarity with the design fragments. Overlays and extensions are available if needed to modify the API fragments.  \nRAML allows you to define RAML DataTypes and RAML NamedExamples instead of defining a schema and example for JSON and another for schema and example for XML and then trying to keep them in sync. With RAML DataTypes and NamedExamples you can support JSON & XML from one DataType and one NamedExample.
+    
+mediaType: [application/json, application/xml]
+securedBy: [passthrough]
+securitySchemes: 
+  passthrough: !include /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/pass-through-security-scheme/1.0.0/pass-through-security-scheme.raml
+
+uses: 
+  customer: /exchange_modules/b2cc42af-8763-43cf-a316-246ce7aefd04/customer-library/1.0.3/customer-library.raml
+  collectionRT: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+
+/customers:
+  type:  
+    collectionRT.collection:
+      mediaType: application/json
+      collectionExample: !include /exchange_modules/b2cc42af-8763-43cf-a316-246ce7aefd04/customer-library/1.0.3/examples/collection.raml
+      collectionResponseExample: !include /exchange_modules/b2cc42af-8763-43cf-a316-246ce7aefd04/customer-library/1.0.3/examples/collectionResponse.raml
+  get:
+    description: Since the traits were defined above, they can be referenced here
+    queryParameters: 
+      customerId?:
+        minLength: 3
+      customerName?:
+        minLength: 3
+      countryCode?:
+        minLength: 3
+        maxLength: 3
+
+  post:
+
+  /{id}:
+    type: 
+      collectionRT.member:
+        mediaType: application/json
+        memberExample: !include /exchange_modules/b2cc42af-8763-43cf-a316-246ce7aefd04/customer-library/1.0.3/examples/member.raml
+    uriParameters: 
+      id:
+        example: "1"
+        default: "1"
+    get:
+    put:
+    delete:

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:account-apispec="http://www.mulesoft.org/schema/mule/account-apispec" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
-http://www.mulesoft.org/schema/mule/account-apispec http://www.mulesoft.org/schema/mule/account-apispec/current/mule-account-apispec.xsd">
-    <http:listener-config name="account-api-spec-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8081" />
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:account-apispec="http://www.mulesoft.org/schema/mule/account-apispec" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/account-apispec http://www.mulesoft.org/schema/mule/account-apispec/current/mule-account-apispec.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <http:listener-config name="customer-api-spec-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${https.port}"	 protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="jks" path="${keystore.path}" keyPassword="${keystore.password}" password="${keystore.password}" />
+			</tls:context>
+		</http:listener-connection>
     </http:listener-config>
-    <apikit:config name="account-api-spec-config" raml="account-api-spec.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <account-apispec:config name="Account_API_Spec_Config" doc:name="Account API Spec Config" doc:id="97583def-14fc-413d-983f-4eadb92d88e2" property_host="${api.account.host}" property_port="${api.account.port}" property_basePath="/api" property_protocol="HTTP" property_client-id="${app.client_id}" property_client-secret="${app.client_secret}"/>
-	<flow name="account-api-spec-main">
-        <http:listener config-ref="account-api-spec-httpListenerConfig" path="/api/*">
+    <apikit:config name="customer-api-spec-config" raml="customer-api-spec.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="customer-api-spec-main">
+        <http:listener config-ref="customer-api-spec-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
@@ -16,7 +21,7 @@ http://www.mulesoft.org/schema/mule/account-apispec http://www.mulesoft.org/sche
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="account-api-spec-config" />
+        <apikit:router config-ref="customer-api-spec-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:BAD_REQUEST">
                 <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
@@ -98,8 +103,8 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="account-api-spec-console">
-        <http:listener config-ref="account-api-spec-httpListenerConfig" path="/console/*">
+    <flow name="customer-api-spec-console">
+        <http:listener config-ref="customer-api-spec-httpListenerConfig" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
@@ -108,10 +113,12 @@ output application/json
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:console config-ref="account-api-spec-config" />
+        <apikit:console config-ref="customer-api-spec-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:NOT_FOUND">
-                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -124,26 +131,37 @@ output application/json
                 </ee:transform>
             </on-error-propagate>
         </error-handler>
+    </flow>    
+    <flow name="put:\customers\(id):application\json:customer-api-spec-config">
+        <account-apispec:put-account-by-id  doc:name="Update Account" doc:id="6c105bc1-23bf-4c8d-85d6-8aed9e3955f3" config-ref="Account_API_Spec_Config"/>
+        <logger level="INFO" doc:name="Logger" doc:id="2d5ca2bd-c169-4eae-b9c4-e37bb5d127d2" message="#[payload]" />
     </flow>
-    <flow name="put:\accounts\(id):application\json:account-api-spec-config">
-		<account-apispec:put doc:name="Update Account" doc:id="49abb4c3-9b86-4c5a-9eee-267334dcc6be" config-ref="Account_API_Spec_Config"/>
-		<logger level="INFO" doc:name="Logger" doc:id="2d5ca2bd-c169-4eae-b9c4-e37bb5d127d2" message="#[payload]"/>
+    <flow name="delete:\customers\(id):customer-api-spec-config">
+        <account-apispec:delete-account-by-id doc:name="Delete Account" doc:id="b60daa3a-8159-4a03-b384-1c29c34df6dc" config-ref="Account_API_Spec_Config" id="#[attributes.uriParams.id]" />
+        <logger level="INFO" doc:name="Logger" doc:id="5723c510-7fdc-46ee-9002-aaec8130f4d0" message="#[payload]" />
     </flow>
-    <flow name="delete:\accounts\(id):account-api-spec-config">
-		<account-apispec:delete doc:name="Delete Account" doc:id="b60daa3a-8159-4a03-b384-1c29c34df6dc" config-ref="Account_API_Spec_Config" id="#[attributes.uriParams.id]"/>
-		<logger level="INFO" doc:name="Logger" doc:id="5723c510-7fdc-46ee-9002-aaec8130f4d0" message="#[payload]"/>
+    <flow name="get:\customers:customer-api-spec-config">
+        <account-apispec:get-accounts doc:name="Get Person Accounts" doc:id="0e9532c4-95ab-4d9d-a333-9adc148fd846" only-persons="true" config-ref="Account_API_Spec_Config" account-id="#[attributes.queryParams.accountId]" account-name="#[attributes.queryParams.accouName]" customer-id="#[attributes.queryParams.customerIdId]" customer-name="#[attributes.queryParams.customerName]" country-code="#[attributes.queryParams.countryCode]" case-id="#[attributes.queryParams.caseId]" />
+        <logger level="INFO" message="get:\accounts:account-api-spec-config" />
     </flow>
-    <flow name="get:\accounts:account-api-spec-config">
-		<account-apispec:get-accounts doc:name="Get Person Accounts" doc:id="0e9532c4-95ab-4d9d-a333-9adc148fd846" only-persons="true" config-ref="Account_API_Spec_Config" account-id="#[attributes.queryParams.accountId]" account-name="#[attributes.queryParams.accouName]" customer-id="#[attributes.queryParams.customerIdId]" customer-name="#[attributes.queryParams.customerName]" country-code="#[attributes.queryParams.countryCode]" case-id="#[attributes.queryParams.caseId]" >
-		</account-apispec:get-accounts>
-		<logger level="INFO" message="get:\accounts:account-api-spec-config" />
-    </flow>
-    <flow name="get:\accounts\(id):account-api-spec-config">
-        <account-apispec:get doc:name="Get Account" doc:id="63d6fe4c-90fc-428d-b74e-899d1d627dac" config-ref="Account_API_Spec_Config" id="#[attributes.uriParams.id]"/>
+    <flow name="get:\customers\(id):customer-api-spec-config">
+        <account-apispec:get-account-by-id doc:name="Get Account" doc:id="63d6fe4c-90fc-428d-b74e-899d1d627dac" config-ref="Account_API_Spec_Config" id="#[attributes.uriParams.id]" />
         <logger level="INFO" message="get:\accounts\(id):account-api-spec-config" />
     </flow>
-    <flow name="post:\accounts:application\json:account-api-spec-config">
-		<account-apispec:post doc:name="Create Account" doc:id="f0109141-d8ad-4d00-a0df-768f51b6341f" config-ref="Account_API_Spec_Config"/>
-		<logger level="INFO" doc:name="Logger" doc:id="5915a0d2-4aee-4686-bd83-919ed9e5b135" message="#[payload]"/>
+    <flow name="post:\customers:application\json:customer-api-spec-config">
+		<ee:transform doc:name="Transform Message" doc:id="b524c66f-cda9-4494-95d4-1521aae3c828" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (customer, indexOf) -> 
+	{accountId: "X" ++ now() as Number {unit: "milliseconds"}} ++ customer]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="966ef923-e1ce-4198-8252-058baf079cc2" message="#[payload]"/>
+		<account-apispec:post-accounts doc:name="Create Account" doc:id="f0109141-d8ad-4d00-a0df-768f51b6341f" config-ref="Account_API_Spec_Config" >
+		</account-apispec:post-accounts>
+        <logger level="INFO" doc:name="Logger" doc:id="5915a0d2-4aee-4686-bd83-919ed9e5b135" message="#[payload]" />
     </flow>
+
 </mule>

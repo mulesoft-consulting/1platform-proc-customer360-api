@@ -1,16 +1,24 @@
+https:
+  port: "8082"
+
 api:
   account:
-    host: "account-api-sfdc-v1.us-e2.cloudhub.io"
-    port: "80"
-  autodiscovery: "15523505"
+    host: "nto-account-api-sfdc-v1.us-e2.cloudhub.io"
+    port: "443"
+    
 
 anypoint:
   platform:
     client_id: "c2b1ba5c20434fddbbe163bfb06036da"
     client_secret: "fb2031a9B0434313b1bD16E84e9f152e"
     visualizer:
-      layer: Process  
+      layer: "Process"  
+
 app:
   client_id: "76a81264c2464d30bb777494f778378a"
   client_secret: "c361203e7e8d48419B81BF2AbAC7645B"
+  autodiscovery: "15527339"
   
+keystore:
+  path: "docker01.domain.local.jks"
+  password: "Welcome1"

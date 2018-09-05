@@ -1,0 +1,53 @@
+#%RAML 1.0 Library
+uses: 
+  common: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/common-library/1.0.11/common-library.raml
+  address: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/postal-address-library/1.0.4/postal-address-library.raml
+  phone: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/phone-library/1.0.3/phone-library.raml
+  email: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/email-library/1.0.2/email-library.raml
+  modifiedBy: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/modified-by-library/1.0.3/modified-by-library.raml
+  collection: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+  currency: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/currency-library/1.0.1/currency-library.raml
+  links: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/hypermedia-library/1.0.4/hypermedia-library.raml
+
+types:
+  Customer:
+    type: object
+    properties: 
+      sourceSystem?: string
+      id?: 
+        example: "c1"
+      name: 
+        example: Mythical Corp
+      phone?: 
+        type: phone.phone[]
+      email?: email.email[]
+      postalAddresses?: address.Address[] 
+      webAddresses?:  links.Link[]
+      financials?:
+        type: object
+        properties: 
+          currency?: currency.Currency
+          annualRevenueInUSD?: 
+            type: number
+            example: 10000000000
+          numberOfEmployees?: 
+            type: number
+            example: 36000
+      createdDateTime?: 
+        type: modifiedBy.modified
+      lastModifiedDateTime?: 
+        type: modifiedBy.modified
+      link?: links.Link
+    example: !include examples/member.raml
+  
+  CustomerCollection:
+    type:  Customer[]
+    example: !include examples/collection.raml
+
+  CustomerCollectionResponse:
+    type: collection.CollectionResponse
+    properties:
+      customers: 
+        type: Customer[]
+        required: false
+    example: !include examples/collectionResponse.raml
