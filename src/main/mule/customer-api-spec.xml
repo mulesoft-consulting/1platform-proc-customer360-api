@@ -142,7 +142,16 @@ output application/json
     </flow>
     <flow name="get:\customers:customer-api-spec-config">
         <account-apispec:get-accounts doc:name="Get Person Accounts" doc:id="0e9532c4-95ab-4d9d-a333-9adc148fd846" only-persons="true" config-ref="Account_API_Spec_Config" account-id="#[attributes.queryParams.accountId]" account-name="#[attributes.queryParams.accouName]" customer-id="#[attributes.queryParams.customerIdId]" customer-name="#[attributes.queryParams.customerName]" country-code="#[attributes.queryParams.countryCode]" case-id="#[attributes.queryParams.caseId]" />
-        <logger level="INFO" message="get:\accounts:account-api-spec-config" />
+        <ee:transform doc:name="Transform Message" doc:id="86a6be3f-5cb9-4f70-b3cf-6493c03df433" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload - "accounts" ++ {customers: payload.accounts}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" message="get:\accounts:account-api-spec-config" />
     </flow>
     <flow name="get:\customers\(id):customer-api-spec-config">
         <account-apispec:get-account-by-id doc:name="Get Account" doc:id="63d6fe4c-90fc-428d-b74e-899d1d627dac" config-ref="Account_API_Spec_Config" id="#[attributes.uriParams.id]" />
