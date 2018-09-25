@@ -1,0 +1,217 @@
+#%RAML 1.0 NamedExample
+meta: 
+  messages: 
+    - severity: INFO
+      code: "200"
+      description: OK
+      link: 
+        href: http://localhost
+        title: All good!
+  totalItems: 2
+  pagingOffset: 1
+  pagingLimit: 15
+
+links: 
+  self: 
+    href: http://localhost/currentPage
+    title: Current page
+  first: 
+    href: http://localhost/firstPage
+    title: First Page
+  prev: 
+    href: http://localhost/previousPage
+    title: Previous page
+  next: 
+    href: http://localhost/nextPage
+    title: Next Page
+  last: 
+    href: http://localhost/lastPage
+    title: Last Page
+
+customers:  
+- sourceSystem: Salesforce NA Marketing
+  id: a1
+  name: Northern Trail Outfitters
+  phone: 
+    - type: Work
+      phoneNumber: 415-233-2345
+      preferred: true
+      doNotCall: false
+      doNotText: false
+  email: 
+    - type: Work
+      address: brett@ga.com
+      preferred: true
+      doNotEmail: false
+  postalAddresses: 
+    - addressId: addr1
+      type: Home
+      addressLines: 
+        - 154 Douglas Fir Dr
+      city: Waleska
+      state: GA
+      postalCode: "30183"
+      countryName: United States of America
+      countryCode: USA
+      effectiveDates: 
+        fromDate: 2018-08-12
+        toDate: 2050-11-23
+  webAddresses:
+    - href: http://mulesoft.com
+      title: Home
+  financials:
+    currency:
+      code: USD
+    annualRevenueInUSD: 10000000000
+    numberOfEmployees: 36000 
+  createdDateTime:
+    byEmail: 
+      type: Corporate
+      address: george@mythical.com
+      preferred: true
+      doNotEmail: true
+    onDateTime: 2018-01-01T12:01:01Z
+  lastModifiedDateTime: 
+    byEmail: 
+      type: Corporate
+      address: mary@mythical.com
+      preferred: true
+      doNotEmail: true
+    onDateTime: 2018-08-01T17:20:30Z
+  link: 
+    href: http://localhost
+    title: Link to Account 360
+
+  orders:
+    - orderId: "00007065"
+      orderDateTime: 2018-01-06T12:13:15Z
+      status: Waiting Fulfillment
+      trackingNumber: 1112cd
+      contact:
+        firstName: Tim
+        lastName: Witz
+        email: tim@company.com
+        phone: 415-278-9279
+      billingAddress:
+        addressId: a1800
+        type: Home
+        addressLines: 
+          - 1800 McAllistor Street
+        city: San Francisco
+        state: CA
+        postalCode: "94115"
+        countryCode: USA
+      deliveryAddress: 
+        addressId: a1800
+        type: Home
+        addressLines: 
+          - 1800 McAllistor Street
+        city: San Francisco
+        state: CA
+        postalCode: "94115"
+        countryCode: USA
+      deliveries:
+          - type: Shipment
+            date: 2018-08-18
+            itemStatus: Pending
+            authorizedPeople: 
+              - firstName: Tim
+                lastName: Witz
+            carrier: UPS
+            trackingNumber: t12334345345
+            amount: 12.00
+            insuredAmount: 10.00
+            comments: Left at front door
+      deliveryStatus: Processing
+      currency:
+        code: USD
+      subTotal: 100.00
+      shippingCost: 20.00
+      taxAmount: 6.00
+      totalAmount: 126.00
+      payments:
+        - transactionId: a123456789
+          dateTime: 2018-08-18T12:13:14Z
+          currency: 
+            code: USD
+          amount: 154.44
+          method: CreditCard
+          paymentInfo:
+            cardType: VISA
+            creditCardNumber: "1234567812345678"
+            cardOwner: Tim Witz
+            expirationDate: 
+              month: 8
+              year: 2018
+            ccv: "874"
+            postalCode: "301683"
+          approved: true
+          additionalInfo: Additional info   
+      orderItems: 
+        - orderLine: 1
+          product:
+            id: "1004100"
+            name: Men’s Thunder Jacket
+          location:
+            type: Store
+            id: s1
+          sourceSystem: SAP
+          deliveries:
+          - type: Shipment
+            date: 2018-08-18
+            itemStatus: Pending
+            authorizedPeople: 
+              - firstName: Tim
+                lastName: Witz
+            carrier: UPS
+            trackingNumber: t12334345345
+            amount: 12.00
+            insuredAmount: 10.00
+            comments: Left at front door
+          quantity:
+            ordered: 3
+            shipped: 2
+            backOrdered: 1
+          pricing:
+            itemAmount: 20.00
+            discount: 
+              program: Labor Day sale
+              percent: 75
+            totalAmount:  20.00
+            discountedAmount: 15.00
+            currency:
+              code: USD
+          link: 
+            href: http://localhost
+            title: Link to product
+        - orderLine: 2
+          product:
+            id: "1806100"
+            name: Men’s Single Track II
+          location:
+            type: Store
+            id: s1
+          sourceSystem: Billing DB
+          deliveries:
+            - type: Pickup
+              date: 2018-08-18
+              authorizedPeople:
+                - firstName: Tim
+                  lastName: Witz
+                  phoneNumber: 415-030-2033
+          quantity:
+            ordered: 4
+            shipped: 4
+            backOrdered: 0
+          pricing:
+            itemAmount: 20.00
+            discount: 
+              program: Back to school
+              amount: 20.00
+            totalAmount:  80.00
+            discountedAmount: 60.00
+            currency:
+              code: USD
+          link: 
+            href: http://localhost
+            title: Link to product

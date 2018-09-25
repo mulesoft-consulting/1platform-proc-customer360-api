@@ -1,0 +1,25 @@
+#%RAML 1.0 Library
+uses:
+  customer: /exchange_modules/b2cc42af-8763-43cf-a316-246ce7aefd04/customer-library/1.0.4/customer-library.raml
+  order: /exchange_modules/66234019-5a31-4239-ba28-4e6d70f0468a/order-library/2.0.3/order-library.raml
+  collection: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.30/collection-library.raml
+
+types:
+  Customer360:
+    type:  customer.Customer
+    properties: 
+      orders?:
+        type:  order.OrderCollection
+    example: !include examples/member.raml        
+  
+  Customer360Collection:
+    type:  Customer360[]
+    example: !include examples/collection.raml
+
+  Customer360CollectionResponse:
+    type: collection.CollectionResponse
+    properties:
+      customers: 
+        type: Customer360[]
+        required: false
+    example: !include examples/collectionResponse.raml

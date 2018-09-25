@@ -1,19 +1,29 @@
 https:
-  port: 
+  port:
 
 api:
-  account:
+  order: 
+    host:  
+    port: 
+    protocol: 
+    
+  customer:
     host: 
     port: 
+    protocol:
     
-
+  product:
+    host: 
+    port: 
+    protocol: 
+    
 anypoint:
   platform:
     client_id: 
     client_secret: 
     visualizer:
-      layer: 
-
+      layer:     
+   
 app:
   client_id: 
   client_secret: 
@@ -21,4 +31,4 @@ app:
   
 keystore:
   path: 
-  password: 
+  password:

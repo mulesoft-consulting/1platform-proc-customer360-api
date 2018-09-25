@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="customer-360-test-suite.xml" />
+	<munit:test name="customer-360-test-suite-getProductsTest" description="Test" doc:id="7550b796-3acd-48cd-8996-c1f68c9f4fda" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getProducts" doc:id="85d7a1a8-97fa-4666-9199-9b0049f272db" name="getProducts"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="06b8374d-c180-4904-95b7-f34b07e9de60" message="#[output application/json --- payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="customer-360-test-suite-getOrdersTest" description="Test" doc:id="a77a1a88-ac66-4bc3-b6fa-f7d97b32150c" >
+		<munit:execution >
+			<set-payload value="P37326679" doc:name="Set Payload" doc:id="03c1e08d-5afc-4305-b6f9-092cd904c7bc" />
+			<flow-ref doc:name="Flow-ref to getOrders" doc:id="67fbeec1-af88-402d-b2da-2fc6364626d0" name="getOrders"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="807d30d7-6cbe-4585-bd53-8c99f22b303d" message="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

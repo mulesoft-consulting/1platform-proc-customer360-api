@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:product-api="http://www.mulesoft.org/schema/mule/product-api" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:customer-apispec="http://www.mulesoft.org/schema/mule/customer-apispec" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:order-api="http://www.mulesoft.org/schema/mule/order-api" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/customer-apispec http://www.mulesoft.org/schema/mule/customer-apispec/current/mule-customer-apispec.xsd http://www.mulesoft.org/schema/mule/order-api http://www.mulesoft.org/schema/mule/order-api/current/mule-order-api.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/product-api http://www.mulesoft.org/schema/mule/product-api/current/mule-product-api.xsd">
+    <http:listener-config name="customer-360-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${https.port}" protocol="HTTPS" >
+			<tls:context >
+				<tls:key-store type="jks" path="${keystore.path}" keyPassword="${keystore.password}" password="${keystore.password}" />
+			</tls:context>
+		</http:listener-connection>
+    </http:listener-config>
+    <apikit:config name="customer-360-config" raml="customer-360.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="customer-360-main">
+        <http:listener config-ref="customer-360-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="customer-360-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="customer-360-console">
+        <http:listener config-ref="customer-360-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="customer-360-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\customer360s:customer-360-config">
+        <choice doc:name="Choice" doc:id="c7c3ed91-26fc-4eba-8e6c-7446ec41665a" >
+			<when expression="#[attributes.queryParams.orderId != null]" >
+				<flow-ref doc:name="Get Customer By Order ID" doc:id="2f5258dd-90bd-4e2c-bdd4-bf321c696026" name="getCustomerByOrderID"/>
+			</when>
+			<otherwise >
+				<customer-apispec:get-customers doc:name="Get customers" doc:id="a36b7afe-4be3-4544-97a3-05948f32bc5d" config-ref="Customer_API_Spec_Config" customer-id="#[attributes.queryParams.customerId]" customer-name="#[attributes.queryParams.customerName]" country-code="#[attributes.queryParams.countryCode]" />
+			</otherwise>
+		</choice>
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="8fecff9b-795d-49a1-a334-817fbd1f1fb9">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	meta: {
+		totalItems: payload.meta.totalItems,
+		pagingOffset: payload.meta.pagingOffset,
+		pagingLimit: payload.meta.pagingLimit,
+		messages: payload.meta.messages map ( message , indexOfMessage ) -> {
+			severity: message.severity,
+			itemId: message.itemId,
+			code: message.code,
+			link: message.link,
+			messageId: message.messageId,
+			description: message.description
+		},
+		sortBy: payload.meta.sortBy
+	},
+	links: payload.links,
+	customers: payload.customers map ( customer , indexOfCustomer ) -> {
+		id: customer.id,
+		webAddresses: customer.webAddresses map ( webAddress , indexOfWebAddress ) -> {
+		},
+		financials: customer.financials,
+		lastModifiedDateTime: customer.lastModifiedDateTime,
+		phone: customer.phone map ( phone , indexOfPhone ) -> {
+			phoneNumber: phone.phoneNumber,
+			doNotCall: phone.doNotCall,
+			"type": phone."type",
+			doNotText: phone.doNotText,
+			preferred: phone.preferred
+		},
+		sourceSystem: customer.sourceSystem,
+		name: customer.name,
+		link: customer.link,
+		createdDateTime: customer.createdDateTime,
+		accountId: customer.accountId,
+		email: customer.email map ( email , indexOfEmail ) -> {
+			address: email.address,
+			doNotEmail: email.doNotEmail,
+			"type": email."type",
+			preferred: email.preferred
+		},
+		postalAddresses: customer.postalAddresses map ( postalAddress , indexOfPostalAddress ) -> {
+			city: postalAddress.city,
+			countryCode: postalAddress.countryCode,
+			postalCode: postalAddress.postalCode,
+			addressLines: postalAddress.addressLines map ( addressLine , indexOfAddressLine ) -> addressLine,
+			state: postalAddress.state,
+			countryName: postalAddress.countryName,
+			"type": postalAddress."type"
+		}
+	} ++ {
+		orders: lookup('getOrders', customer.accountId)
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\customer360s\(id):customer-360-config">
+        <customer-apispec:get-customer-by-id doc:name="Get customer by id" doc:id="72dfb5f9-ac7c-4807-939b-49fca1f602dc" config-ref="Customer_API_Spec_Config" id="#[attributes.uriParams.id]" />
+        <ee:transform doc:name="Transform Message" doc:id="324c863e-d20f-46a7-ae84-5cd2ac7ff6ae">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+---
+{
+	id: payload.id,
+	webAddresses: payload.webAddresses map ( webAddress , indexOfWebAddress ) -> {
+		href: webAddress.href,
+		title: webAddress.title
+	},
+	financials: payload.financials,
+	lastModifiedDateTime: payload.lastModifiedDateTime,
+	phone: payload.phone map ( phone , indexOfPhone ) -> {
+		phoneNumber: phone.phoneNumber,
+		doNotCall: phone.doNotCall,
+		"type": phone."type",
+		doNotText: phone.doNotText,
+		preferred: phone.preferred
+	},
+	sourceSystem: payload.sourceSystem,
+	name: payload.name,
+	link: payload.link,
+	createdDateTime: payload.createdDateTime,
+	accountId: payload.accountId,
+	email: payload.email map ( email , indexOfEmail ) -> {
+		address: email.address,
+		doNotEmail: email.doNotEmail,
+		"type": email."type",
+		preferred: email.preferred
+	},
+	postalAddresses: payload.postalAddresses map ( postalAddress , indexOfPostalAddress ) -> {
+		city: postalAddress.city,
+		countryCode: postalAddress.countryCode,
+		postalCode: postalAddress.postalCode,
+		addressLines: postalAddress.addressLines map ( addressLine , indexOfAddressLine ) -> addressLine,
+		state: postalAddress.state,
+		countryName: postalAddress.countryName,
+		"type": postalAddress."type"
+	} 
+} ++ {orders: lookup('getOrders', payload.accountId)
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="getOrders" doc:id="6f2bf6a7-773a-456f-a23b-38b1928e5ac9">
+			<order-api:get-orders doc:name="Get orders" doc:id="659ba35c-89b4-4750-a02e-b8b218e69291" customer-id="#[payload]" config-ref="Order_API_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="5ca94cd7-6ec3-471c-b96f-f6cc1b24b6d6">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+var products = lookup("getProducts",[])
+fun getProductById(id) = products[?($.id == id or $.productNumber == id)][0]
+var sortOrders = ((payload.orders default[]) orderBy -$.orderId default [])
+var today = now()
+---
+ sortOrders map (order, index) -> {
+	orderDateTime: order.orderDateTime default today,
+	shippingCost: order.shippingCost,
+	orderId: order.orderId,
+	sourceSystem: order.sourceSystem,
+	created: order.created,
+	subtotal: 1500,
+	orderItems: order.orderItems map (item, itemIndex) -> {
+		product: {
+			id: item.product.id,
+			name: getProductById(item.product.id).name
+		},
+		quantity: item.quantity,
+		sourceSystem: item.sourceSystem,
+		created: item.created,
+		orderLine: item.orderLine,
+		link: item.link,
+		modified: item.modified,
+		location: item.location,
+		pricing: {
+			discountedAmount: 0,
+			totalAmount: item.quantity.ordered * (getProductById(item.product.id).amount default 0) as Number,
+			itemAmount: getProductById(item.product.id).amount default 0,
+			discount: item.discount,
+			currency: item.currency
+		},
+		deliveries: order.deliveries,
+	},
+	totalAmount: order.totalAmount,
+	deliveryAddress: order.deliveryAddress,
+	contact: order.contact,
+	customerId: order.customerId,
+	modified: order.modifiedId,
+	currency: order.currency,
+	billingAddresses: order.bullingAddresses,
+	taxAmount: order.taxAmount,
+	trackingNumber: order.trackingNumber,
+	deliveryStatus: order.deliveryStatus,
+	status: order.status 
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+	<flow name="getProducts" doc:id="5474851f-f86c-439a-b719-25f453c641ab" >
+		<ee:cache doc:name="Cache" doc:id="6e743247-60f1-41c8-b957-2fe17327fb74" >
+			<product-api:get-products doc:name="Get products" doc:id="ea6a9b3c-40b6-44a0-8d70-5db2c89bb8ba" config-ref="Product_API_Config"/>
+			<ee:transform doc:name="Transform Message" doc:id="c0778422-1c7d-4930-97b5-33d46dc171f9">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload.products map (product, index) ->{
+	id: product.id,
+	productNumber: product.productNumber,
+	name: product.name,
+	amount: product.pricing.costOfGoodsSold  default 0 as Number
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</ee:cache>
+	</flow>
+	<flow name="getCustomerByOrderID" doc:id="d02385dc-46d6-4402-9c2b-177d2f4a3a2c" >
+		<try doc:name="Try" doc:id="e0a1be13-c357-4fa8-8ff4-7cb0897c57dd" >
+			<order-api:get-order-by-id doc:name="Get order by id" doc:id="9b7f1fa0-890d-448d-894b-00a587fadd46" config-ref="Order_API_Config" id="#[attributes.queryParams.orderId]" target="customerId" targetValue="#[payload.customerId]" />
+			<customer-apispec:get-customer-by-id doc:name="Get customer by id" doc:id="f5d09636-e352-4e5e-87ea-e3d95c124aca" config-ref="Customer_API_Spec_Config" id="#[vars.customerId]"/>
+			<ee:transform doc:name="Transform Message" doc:id="2476be9e-a3e3-459e-b17b-9336bfe3f240">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	meta: {
+		totalItems: sizeOf([payload]),
+		pagingOffset: 0,
+		pagingLimit: 1,
+	},
+	customers: [payload]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="369a9f2d-f1f5-4398-93ec-4115c8ce38cc" type="ANY">
+					<ee:transform doc:name="Transform Message" doc:id="303be0d4-06a1-4b79-9554-2eaac5749bd9" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	meta: {
+		totalItems: 0,
+		pagingOffset: 0,
+		pagingLimit: 0,
+		messages: [{
+			severity: "Error",
+			code: 500,
+			description: "Error searching by order ID"		
+		}]
+	},
+	customers: []
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+	</flow>
+</mule>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:account-apispec="http://www.mulesoft.org/schema/mule/account-apispec" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:product-api="http://www.mulesoft.org/schema/mule/product-api" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:customer-apispec="http://www.mulesoft.org/schema/mule/customer-apispec"
+	xmlns:order-api="http://www.mulesoft.org/schema/mule/order-api" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/order-api http://www.mulesoft.org/schema/mule/order-api/current/mule-order-api.xsd
+http://www.mulesoft.org/schema/mule/customer-apispec http://www.mulesoft.org/schema/mule/customer-apispec/current/mule-customer-apispec.xsd
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
-http://www.mulesoft.org/schema/mule/account-apispec http://www.mulesoft.org/schema/mule/account-apispec/current/mule-account-apispec.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="11b8d98a-b23a-47b1-8516-3636b5ba15d8" file="config/configuration.yaml" />
-	<api-gateway:autodiscovery apiId="${app.autodiscovery}" doc:name="API Autodiscovery" doc:id="c8e693d0-0bd1-4a15-99f0-b9fda9ca65f6" flowRef="customer-api-spec-main" />
-	<account-apispec:config name="Account_API_Spec_Config" doc:name="Account API Spec Config" doc:id="97583def-14fc-413d-983f-4eadb92d88e2" property_host="${api.account.host}" property_port="${api.account.port}" property_basePath="/api" property_client-id="${app.client_id}" property_client-secret="${app.client_secret}" />
+http://www.mulesoft.org/schema/mule/product-api http://www.mulesoft.org/schema/mule/product-api/current/mule-product-api.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="be0ec1a7-9999-4031-87ae-d878822bcd25" file="config/configuration.yaml" />
+	<order-api:config name="Order_API_Config" doc:name="Order API Config" doc:id="4f2e9364-80f4-4ae1-9605-ec8aa45fda65" property_host="${api.order.host}" property_port="${api.order.port}" property_basePath="/api" property_protocol="${api.order.protocol}" property_client-id="${app.client_id}" property_client-secret="${app.client_secret}" />
+	<customer-apispec:config name="Customer_API_Spec_Config" doc:name="Customer API Spec Config" doc:id="2062b237-c123-4bce-a41b-b954ce884d02" property_host="${api.customer.host}" property_port="${api.customer.port}" property_basePath="/api" property_client-id="${app.client_id}" property_client-secret="${app.client_secret}" property_protocol="${api.customer.protocol}"/>
+	<api-gateway:autodiscovery apiId="${app.autodiscovery}" doc:name="API Autodiscovery" doc:id="99af44cf-2153-4b18-9cff-c7b6f0abf523" flowRef="customer-360-main" />
+	<product-api:config name="Product_API_Config" doc:name="Product API Config" doc:id="434e12d6-daf0-480a-a702-a26f052baf73" property_host="${api.product.host}" property_port="${api.product.port}" property_basePath="/api" property_protocol="${api.product.protocol}" property_client-id="${app.client_id}" property_client-secret="${app.client_secret}" />
 </mule>

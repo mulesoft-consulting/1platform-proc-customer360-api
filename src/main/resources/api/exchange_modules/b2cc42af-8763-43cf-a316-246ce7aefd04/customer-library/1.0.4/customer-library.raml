@@ -1,11 +1,9 @@
 #%RAML 1.0 Library
 uses: 
-  common: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/common-library/1.0.11/common-library.raml
+  common: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/common-library/1.0.12/common-library.raml
   address: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/postal-address-library/1.0.4/postal-address-library.raml
   phone: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/phone-library/1.0.3/phone-library.raml
-  email: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/email-library/1.0.2/email-library.raml
-  modifiedBy: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/modified-by-library/1.0.3/modified-by-library.raml
-  collection: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+  collection: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.30/collection-library.raml
   currency: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/currency-library/1.0.1/currency-library.raml
   links: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/hypermedia-library/1.0.4/hypermedia-library.raml
 
@@ -20,7 +18,7 @@ types:
         example: Mythical Corp
       phone?: 
         type: phone.phone[]
-      email?: email.email[]
+      email?: common.Email[]
       postalAddresses?: address.Address[] 
       webAddresses?:  links.Link[]
       financials?:
@@ -34,9 +32,9 @@ types:
             type: number
             example: 36000
       createdDateTime?: 
-        type: modifiedBy.modified
+        type: common.Modified
       lastModifiedDateTime?: 
-        type: modifiedBy.modified
+        type: common.Modified
       link?: links.Link
     example: !include examples/member.raml
   

@@ -3,19 +3,20 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mycompany</groupId>
-	<artifactId>proc-customer-api</artifactId>
+	<artifactId>proc-customer-360-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>mule-application</packaging>
 
-	<name>proc-customer360-api</name>
+	<name>proc-customer-360-api</name>
 
     <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<app.runtime>4.1.3</app.runtime>
+		<app.runtime>4.1.2</app.runtime>
 		<mule.maven.plugin.version>3.1.6</mule.maven.plugin.version>
-	</properties>
+	<munit.version>2.1.3</munit.version>
+    </properties>
 
 	<build>
 		<plugins>
@@ -25,17 +26,51 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-				<classifier>mule-application</classifier>
-                </configuration>
+				</configuration>
 			</plugin>
-		</plugins>
+		<plugin>
+                <groupId>com.mulesoft.munit.tools</groupId>
+                <artifactId>munit-maven-plugin</artifactId>
+                <version>${munit.version}</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                            <goal>coverage-report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <coverage>
+                        <runCoverage>true</runCoverage>
+                        <formats>
+                            <format>html</format>
+                        </formats>
+                    </coverage>
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
 
 	<dependencies>
 		<dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-apikit-module</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.6</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    	<dependency>
+            <groupId>66234019-5a31-4239-ba28-4e6d70f0468a</groupId>
+            <artifactId>customer-api</artifactId>
+            <version>1.0.1</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    	<dependency>
+            <groupId>66234019-5a31-4239-ba28-4e6d70f0468a</groupId>
+            <artifactId>order-api-spec</artifactId>
+            <version>2.0.1</version>
             <classifier>mule-plugin</classifier>
         </dependency>
     	<dependency>
@@ -51,10 +86,23 @@
             <classifier>mule-plugin</classifier>
         </dependency>
     	<dependency>
-            <groupId>66234019-5a31-4239-ba28-4e6d70f0468a</groupId>
-            <artifactId>account-api-spec</artifactId>
-            <version>1.0.12</version>
+            <groupId>4ff02cd7-9e08-481b-890b-15ff7467b894</groupId>
+            <artifactId>product-api-spec</artifactId>
+            <version>3.0.1</version>
             <classifier>mule-plugin</classifier>
+        </dependency>
+    	<dependency>
+            <groupId>com.mulesoft.munit</groupId>
+            <artifactId>munit-runner</artifactId>
+            <version>2.1.3</version>
+            <classifier>mule-plugin</classifier>
+            <scope>test</scope>
+        </dependency>	<dependency>
+            <groupId>com.mulesoft.munit</groupId>
+            <artifactId>munit-tools</artifactId>
+            <version>2.1.3</version>
+            <classifier>mule-plugin</classifier>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -23,7 +23,6 @@ types:
         example: "OK"
       link?: links.Link
 
-
   ResponseMetadata:
     type: object
     properties:
@@ -32,6 +31,30 @@ types:
                 
   ErrorResponse:
     type: ResponseMetadata
+
+  Email:
+    properties:
+      type?: 
+        enum: [Personal, Work, Corporate]
+      address: 
+        type: string
+        example: brettroeder@company.com
+      preferred?: 
+        type: boolean
+        example: false
+      doNotEmail?:
+        type: boolean
+        example: false
+        
+  Modified:
+    properties: 
+      byEmail?:
+        type: Email
+      byUserId?:
+        type: string
+      onDateTime?:
+        type: datetime
+        example: "2018-07-01T12:10:11Z"
 
   resourceId:
     type: string
