@@ -16,14 +16,7 @@ api:
     host: 
     port: 
     protocol: 
-    
-anypoint:
-  platform:
-    client_id: 
-    client_secret: 
-    visualizer:
-      layer:     
-   
+       
 app:
   client_id: 
   client_secret: 
