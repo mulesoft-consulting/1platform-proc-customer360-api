@@ -7,7 +7,7 @@ pipeline {
     MULE_VERSION = '4.1.4-AM'
     BG = "1Platform\\Retail\\Marketing"
     WORKER = "Small"
-    APP_CLIENT_CREDS = "$BRANCH_NAME-api-mgr-proc-customer360-api"
+    APP_CLIENT_CREDS = credentials("$BRANCH_NAME-api-mgr-proc-customer360-api")
   }
   stages {
     stage('Prepare') {
