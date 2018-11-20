@@ -48,7 +48,8 @@
 							<app.client_secret>${app.client_secret}</app.client_secret>
 						</properties>
 					</cloudHubDeployment>
-				</configuration>
+				<classifier>mule-application</classifier>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.mulesoft.munit.tools</groupId>
