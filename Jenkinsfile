@@ -73,6 +73,12 @@ pipeline {
     }
   }
 
+  post {
+    always {
+      step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
+    }
+  }
+
   tools {
     maven 'M3'
   }
