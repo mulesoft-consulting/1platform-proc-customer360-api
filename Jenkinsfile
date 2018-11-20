@@ -6,7 +6,7 @@ pipeline {
     DEPLOY_CREDS = credentials('deploy-anypoint-user')
     MULE_VERSION = '4.1.4-AM'
     BG = "1Platform\\Retail\\Marketing"
-    WORKER = "Small"
+    WORKER = "MEDIUM"
     APP_CLIENT_CREDS = credentials("$BRANCH_NAME-api-mgr-proc-customer360-api")
   }
   stages {
