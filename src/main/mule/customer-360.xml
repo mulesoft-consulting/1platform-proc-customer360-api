@@ -254,7 +254,7 @@ output application/json skipNullOn="everywhere"
 output application/json skipNullOn="everywhere"
 var products = lookup("getProducts",[])
 fun getProductById(id) = products[?($.id == id or $.productNumber == id)][0]
-var sortOrders = ((payload.orders default[]) orderBy -$.orderId default [])
+var sortOrders = ((payload.orders default[]) orderBy -$.orderDateTime as DateTime as Number)
 var today = now()
 ---
  sortOrders map (order, index) -> {
